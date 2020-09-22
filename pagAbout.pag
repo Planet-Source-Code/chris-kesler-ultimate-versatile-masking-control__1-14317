@@ -1,0 +1,56 @@
+VERSION 5.00
+Begin VB.PropertyPage pagAbout 
+   BackColor       =   &H00000000&
+   Caption         =   "About"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Image Image1 
+      Height          =   315
+      Left            =   1290
+      Picture         =   "pagAbout.pgx":0000
+      Top             =   150
+      Width           =   3315
+   End
+   Begin VB.Label lblRights 
+      Alignment       =   2  'Center
+      BackStyle       =   0  'Transparent
+      Caption         =   "Label1"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   2595
+      Left            =   615
+      TabIndex        =   0
+      Top             =   810
+      Width           =   4605
+   End
+End
+Attribute VB_Name = "pagAbout"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+
+Private Sub PropertyPage_Paint()
+    Dim strTemp As String
+    
+    strTemp = "Common Business Rules Control (OCX) " & App.Major & "." & App.Revision & "." & App.Minor
+    strTemp = strTemp & vbCr & "Copyright " & Chr(169) & " 2000 Arch Communications, Inc."
+    'strTemp = strTemp & vbCr & vbCr & "All rights reserved. This software is protected by copyright law.  Unauthorized reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under law."
+    strTemp = strTemp & vbCr & "Please feel free to alter, distribute, and/or reproduce this code in part or whole as you see fit."
+    lblRights.Caption = strTemp
+End Sub
+

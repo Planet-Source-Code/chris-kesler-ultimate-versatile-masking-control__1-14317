@@ -1,0 +1,106 @@
+VERSION 5.00
+Begin VB.PropertyPage pagEmail 
+   Caption         =   "E-mail"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Tag             =   "yourname@provider.com"
+   Begin VB.Frame Frame1 
+      Height          =   2700
+      Left            =   210
+      TabIndex        =   1
+      Top             =   225
+      Width           =   5505
+      Begin VB.OptionButton optEmail 
+         Caption         =   "Allow Multiple Decimals Before and After @ Symbol"
+         Height          =   405
+         Index           =   3
+         Left            =   765
+         TabIndex        =   5
+         Tag             =   "your.name@provider.co.uk"
+         Top             =   1920
+         Width           =   3915
+      End
+      Begin VB.OptionButton optEmail 
+         Caption         =   "Allow Multiple Decimals After @ Symbol"
+         Height          =   405
+         Index           =   2
+         Left            =   765
+         TabIndex        =   4
+         Tag             =   "yourname@provider.co.uk"
+         Top             =   1415
+         Width           =   3645
+      End
+      Begin VB.OptionButton optEmail 
+         Caption         =   "Allow Decimal Before @ Symbol"
+         Height          =   405
+         Index           =   1
+         Left            =   765
+         TabIndex        =   3
+         Tag             =   "your.name@provider.com"
+         Top             =   910
+         Width           =   3030
+      End
+      Begin VB.OptionButton optEmail 
+         Caption         =   "Standard Email"
+         Height          =   405
+         Index           =   0
+         Left            =   765
+         TabIndex        =   2
+         Tag             =   "yourname@provider.com"
+         Top             =   405
+         Width           =   1860
+      End
+   End
+   Begin VB.Label lblProviderSample 
+      Alignment       =   2  'Center
+      Caption         =   "yourname@provider.com"
+      Height          =   405
+      Left            =   930
+      TabIndex        =   0
+      Top             =   3075
+      Width           =   4050
+   End
+End
+Attribute VB_Name = "pagEmail"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Private blnUpdate As Boolean
+Private intOption As Integer
+
+
+Private Sub optEmail_Click(Index As Integer)
+    
+    lblProviderSample.Caption = optEmail(Index).Tag
+    intOption = Index
+    Changed = True
+
+End Sub
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 6 Then
+        optEmail(SelectedControls(0).EmailType).Value = True
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).EmailType = intOption
+    SelectedControls(0).RefreshProperties "EmailType"
+End Sub
+
+

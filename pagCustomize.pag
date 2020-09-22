@@ -1,0 +1,142 @@
+VERSION 5.00
+Begin VB.PropertyPage pagCustomize 
+   Caption         =   "Customize"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame Frame1 
+      Height          =   3225
+      Left            =   150
+      TabIndex        =   0
+      Top             =   105
+      Width           =   5595
+      Begin VB.CheckBox chkAllCaps 
+         Caption         =   "All Caps?"
+         Height          =   255
+         Left            =   2115
+         TabIndex        =   7
+         Top             =   720
+         Width           =   1965
+      End
+      Begin VB.TextBox txtCustom 
+         Height          =   315
+         Left            =   1110
+         MaxLength       =   50
+         TabIndex        =   4
+         Top             =   2805
+         Width           =   3435
+      End
+      Begin VB.CheckBox chkCustom 
+         Caption         =   "Allow Numeric characters"
+         Height          =   375
+         Index           =   1
+         Left            =   1710
+         TabIndex        =   3
+         Top             =   1095
+         Width           =   2295
+      End
+      Begin VB.CheckBox chkCustom 
+         Caption         =   "Allow Aplha characters"
+         Height          =   375
+         Index           =   0
+         Left            =   1710
+         TabIndex        =   2
+         Top             =   315
+         Width           =   2295
+      End
+      Begin VB.TextBox txtMax 
+         Height          =   315
+         Left            =   3750
+         TabIndex        =   1
+         Top             =   1815
+         Width           =   525
+      End
+      Begin VB.Label lblCustom 
+         Alignment       =   2  'Center
+         Caption         =   "Specific characters allowed:"
+         Height          =   225
+         Left            =   510
+         TabIndex        =   6
+         Top             =   2475
+         Width           =   4665
+      End
+      Begin VB.Label Label1 
+         Caption         =   "Maximum characters allowed:"
+         Height          =   255
+         Left            =   1410
+         TabIndex        =   5
+         Top             =   1845
+         Width           =   2295
+      End
+   End
+End
+Attribute VB_Name = "pagCustomize"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+
+Private Sub chkAllCaps_Click()
+    Changed = True
+End Sub
+
+Private Sub chkCustom_Click(Index As Integer)
+    Changed = True
+End Sub
+
+Private Sub txtCustom_Change()
+        Changed = True
+End Sub
+
+Private Sub txtCustom_KeyPress(KeyAscii As Integer)
+    If InStr(1, txtCustom.Text, Chr(KeyAscii)) > 0 Then KeyAscii = 0
+End Sub
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 7 Then
+        With SelectedControls(0)
+            chkCustom(0).Value = Abs(.AllowAlpha)
+            chkCustom(1).Value = Abs(.AllowNumeric)
+            txtCustom.Text = .CharAllowed
+            txtMax.Text = .MaxAllowed
+            chkAllCaps = Abs(.AllCaps)
+        End With
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    With SelectedControls(0)
+        .AllowAlpha = chkCustom(0).Value * -1
+        .AllowNumeric = chkCustom(1).Value * -1
+        .CharAllowed = txtCustom.Text
+        .MaxAllowed = Val(txtMax.Text)
+        .AllCaps = chkAllCaps.Value * -1
+        .RefreshProperties "AllowAlpha"
+        .RefreshProperties "AllowNumeric"
+        .RefreshProperties "CharAllowed"
+        .RefreshProperties "MaxAllowed"
+        .RefreshProperties "AllCaps"
+    End With
+End Sub
+
+Private Sub txtMax_Change()
+        Changed = True
+End Sub
+
+Private Sub txtMax_KeyPress(KeyAscii As Integer)
+    If KeyAscii <> vbKeyBack And (KeyAscii < 48 Or KeyAscii > 57) Then KeyAscii = 0
+End Sub

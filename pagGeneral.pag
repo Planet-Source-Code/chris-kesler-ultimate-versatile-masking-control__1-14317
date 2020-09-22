@@ -1,0 +1,137 @@
+VERSION 5.00
+Begin VB.PropertyPage pagGeneral 
+   Caption         =   "General"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame Frame1 
+      Height          =   3225
+      Left            =   150
+      TabIndex        =   0
+      Top             =   105
+      Width           =   5625
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Number Mask Format"
+         Height          =   435
+         Index           =   9
+         Left            =   3015
+         TabIndex        =   10
+         Top             =   2670
+         Width           =   2460
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Currency mask format"
+         Height          =   435
+         Index           =   5
+         Left            =   3015
+         TabIndex        =   9
+         Top             =   285
+         Width           =   1965
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Custom mask format"
+         Height          =   435
+         Index           =   7
+         Left            =   3015
+         TabIndex        =   8
+         Top             =   2085
+         Width           =   1965
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Email mask format"
+         Height          =   435
+         Index           =   6
+         Left            =   3015
+         TabIndex        =   7
+         Top             =   885
+         Width           =   1965
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Zip Code mask format"
+         Height          =   435
+         Index           =   4
+         Left            =   735
+         TabIndex        =   6
+         Top             =   2070
+         Width           =   1965
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "SSN mask format"
+         Height          =   435
+         Index           =   3
+         Left            =   735
+         TabIndex        =   5
+         Top             =   1470
+         Width           =   1755
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Phone mask format"
+         Height          =   435
+         Index           =   2
+         Left            =   735
+         TabIndex        =   4
+         Top             =   870
+         Width           =   1755
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Date mask format"
+         Height          =   435
+         Index           =   0
+         Left            =   735
+         TabIndex        =   3
+         Top             =   270
+         Value           =   -1  'True
+         Width           =   1755
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "IP Addr. mask format"
+         Height          =   435
+         Index           =   8
+         Left            =   3015
+         TabIndex        =   2
+         Top             =   1485
+         Width           =   1965
+      End
+      Begin VB.OptionButton optGeneral 
+         Caption         =   "Int'l Zip Code mask format"
+         Height          =   435
+         Index           =   1
+         Left            =   735
+         TabIndex        =   1
+         Top             =   2670
+         Width           =   2220
+      End
+   End
+End
+Attribute VB_Name = "pagGeneral"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+Dim blnINIT As Boolean
+Dim intOption As Integer
+
+Private Sub optGeneral_Click(Index As Integer)
+    If blnINIT Then Exit Sub
+    intOption = Index
+    SelectedControls(0).Masktype = Index
+    Changed = True
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).Masktype = intOption
+    SelectedControls(0).RefreshProperties "Masktype"
+End Sub
+
+Private Sub PropertyPage_Paint()
+    blnINIT = True
+    'SelectedControls(0).Masktype = intOption
+    optGeneral(SelectedControls(0).Masktype).Value = True
+    Changed = False
+    blnINIT = False
+End Sub
