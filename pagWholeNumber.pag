@@ -1,0 +1,241 @@
+VERSION 5.00
+Begin VB.PropertyPage pagWholeNumber 
+   Caption         =   "Number"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame frmWholeNum 
+      Height          =   2820
+      Left            =   300
+      TabIndex        =   0
+      Top             =   135
+      Width           =   5355
+      Begin VB.CheckBox chkAllowNeg 
+         Caption         =   "Allow Negative Numbers"
+         Height          =   255
+         Left            =   1515
+         TabIndex        =   5
+         Top             =   765
+         Width           =   2190
+      End
+      Begin VB.TextBox txtPrecision 
+         Enabled         =   0   'False
+         Height          =   330
+         Left            =   1485
+         TabIndex        =   3
+         Text            =   "0"
+         Top             =   1680
+         Width           =   375
+      End
+      Begin VB.CheckBox chkUseDecimal 
+         Caption         =   "Use Decimal?"
+         Height          =   390
+         Left            =   1515
+         TabIndex        =   2
+         Top             =   1125
+         Width           =   1395
+      End
+      Begin VB.Label lblPrecision 
+         AutoSize        =   -1  'True
+         Caption         =   "Precision (Numbers after Decimal - (1-10))"
+         Height          =   195
+         Left            =   1920
+         TabIndex        =   4
+         Top             =   1740
+         Width           =   2925
+      End
+   End
+   Begin VB.Label lblWholeNumSample 
+      Alignment       =   2  'Center
+      Caption         =   "1234567890"
+      Height          =   285
+      Left            =   585
+      TabIndex        =   1
+      Top             =   3120
+      Width           =   4665
+   End
+End
+Attribute VB_Name = "pagWholeNumber"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Private Sub chkAllowNeg_Click()
+    
+    If chkAllowNeg.Value = vbChecked Then
+        RefreshLabel
+    Else
+        RefreshLabel
+    End If
+
+    Changed = True
+
+End Sub
+
+Private Sub chkUseDecimal_Click()
+    
+    If chkUseDecimal.Value = vbChecked Then
+        txtPrecision.Enabled = True
+        RefreshLabel
+    Else
+        txtPrecision.Text = 0
+        txtPrecision.Enabled = False
+        RefreshLabel
+    End If
+    
+    Changed = True
+End Sub
+
+
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 9 Then
+        txtPrecision.Text = SelectedControls(0).Precision
+        chkAllowNeg.Value = Abs(SelectedControls(0).AllowNegative)
+        chkUseDecimal.Value = Abs(SelectedControls(0).UsePrecision)
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+
+    If chkAllowNeg.Value = vbChecked Then
+        SelectedControls(0).AllowNegative = True
+    Else
+        SelectedControls(0).AllowNegative = False
+    End If
+    If chkUseDecimal.Value = vbChecked Then
+        SelectedControls(0).UsePrecision = True
+    Else
+        SelectedControls(0).UsePrecision = False
+    End If
+    SelectedControls(0).Precision = Int(txtPrecision.Text)
+    SelectedControls(0).RefreshProperties "AllowNegative"
+    SelectedControls(0).RefreshProperties "UsePrecision"
+    SelectedControls(0).RefreshProperties "Precision"
+    
+End Sub
+
+
+Private Function RefreshLabel()
+    If chkAllowNeg.Value = vbChecked Then
+          If txtPrecision.Text = "" Then
+              txtPrecision.Text = "0"
+          End If
+          Select Case Int(txtPrecision.Text)
+              Case 0
+                  lblWholeNumSample.Caption = "-1234567890"
+              Case 1
+                  lblWholeNumSample.Caption = "-123456789.0"
+              Case 2
+                  lblWholeNumSample.Caption = "-12345678.90"
+              Case 3
+                  lblWholeNumSample.Caption = "-1234567.890"
+              Case 4
+                  lblWholeNumSample.Caption = "-123456.7890"
+              Case 5
+                  lblWholeNumSample.Caption = "-12345.67890"
+              Case 6
+                  lblWholeNumSample.Caption = "-1234.567890"
+              Case 7
+                  lblWholeNumSample.Caption = "-123.4567890"
+              Case 8
+                  lblWholeNumSample.Caption = "-12.34567890"
+              Case 9
+                  lblWholeNumSample.Caption = "-1.234567890"
+              Case 10
+                  lblWholeNumSample.Caption = "-.1234567890"
+          End Select
+    Else
+          If txtPrecision.Text = "" Then
+              txtPrecision.Text = "0"
+          End If
+          Select Case Int(txtPrecision.Text)
+              Case 0
+                  lblWholeNumSample.Caption = "1234567890"
+              Case 1
+                  lblWholeNumSample.Caption = "123456789.0"
+              Case 2
+                  lblWholeNumSample.Caption = "12345678.90"
+              Case 3
+                  lblWholeNumSample.Caption = "1234567.890"
+              Case 4
+                  lblWholeNumSample.Caption = "123456.7890"
+              Case 5
+                  lblWholeNumSample.Caption = "12345.67890"
+              Case 6
+                  lblWholeNumSample.Caption = "1234.567890"
+              Case 7
+                  lblWholeNumSample.Caption = "123.4567890"
+              Case 8
+                  lblWholeNumSample.Caption = "12.34567890"
+              Case 9
+                  lblWholeNumSample.Caption = "1.234567890"
+              Case 10
+                  lblWholeNumSample.Caption = ".1234567890"
+          End Select
+    End If
+    Changed = True
+End Function
+
+Private Sub txtPrecision_KeyPress(KeyAscii As Integer)
+    
+    If KeyAscii < 48 Or KeyAscii > 57 Then
+        If KeyAscii = vbKeyBack Then
+            If Len(txtPrecision.Text) = 0 Then
+                txtPrecision.Text = 0
+            End If
+            RefreshLabel
+            Exit Sub
+        End If
+        KeyAscii = 0
+        Exit Sub
+    End If
+    
+    If Len(txtPrecision.Text) < 2 Then
+        Select Case KeyAscii
+            Case 48
+                    KeyAscii = 0
+                    Exit Sub
+            Case 49
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 50
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 51
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 52
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 53
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 54
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 55
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 56
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+            Case 57
+                txtPrecision.Text = "0" & Chr(KeyAscii)
+        End Select
+    ElseIf Len(txtPrecision.Text) = 2 And KeyAscii = 48 Then
+        If InStr(1, txtPrecision.Text, "1") > 0 Then
+            txtPrecision.Text = "10"
+            RefreshLabel
+        ElseIf InStr(1, txtPrecision.Text, "1") = 0 Then
+            KeyAscii = 0
+        End If
+    End If
+    RefreshLabel
+    KeyAscii = 0
+End Sub

@@ -1,0 +1,70 @@
+VERSION 5.00
+Begin VB.PropertyPage pagSSN 
+   Caption         =   "SSN"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame Frame1 
+      Height          =   2850
+      Left            =   225
+      TabIndex        =   1
+      Top             =   120
+      Width           =   5490
+      Begin VB.CheckBox chkSSN 
+         Caption         =   "Use dashes"
+         Height          =   435
+         Left            =   2220
+         TabIndex        =   2
+         Top             =   1200
+         Width           =   1485
+      End
+   End
+   Begin VB.Label lblSample 
+      Alignment       =   2  'Center
+      Caption         =   "Sample: 123-45-6789"
+      Height          =   285
+      Left            =   630
+      TabIndex        =   0
+      Top             =   3090
+      Width           =   4665
+   End
+End
+Attribute VB_Name = "pagSSN"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+
+Private Sub chkSSN_Click()
+    If chkSSN.Value = 1 Then
+        lblSample.Caption = "Sample: 123-45-6789"
+    Else
+        lblSample.Caption = "Sample: 123456789"
+    End If
+    Changed = True
+End Sub
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 3 Then
+        chkSSN.Value = Abs(SelectedControls(0).SSNDashes)
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).SSNDashes = chkSSN.Value * -1
+    SelectedControls(0).RefreshProperties "SSNDashes"
+End Sub

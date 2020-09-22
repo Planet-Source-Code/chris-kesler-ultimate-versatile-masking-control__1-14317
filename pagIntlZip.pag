@@ -1,0 +1,68 @@
+VERSION 5.00
+Begin VB.PropertyPage pagIntlZip 
+   Caption         =   "Intl Zip"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame Frame1 
+      Height          =   2835
+      Left            =   150
+      TabIndex        =   1
+      Top             =   120
+      Width           =   5550
+      Begin VB.CheckBox chkIntlZip 
+         Caption         =   "Use Spaces"
+         Height          =   435
+         Left            =   2115
+         TabIndex        =   2
+         Top             =   1245
+         Width           =   1335
+      End
+   End
+   Begin VB.Label lblIntlZipSample 
+      Alignment       =   2  'Center
+      Caption         =   "Sample: GH5 R56"
+      Height          =   285
+      Left            =   450
+      TabIndex        =   0
+      Top             =   3120
+      Width           =   4665
+   End
+End
+Attribute VB_Name = "pagIntlZip"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Private Sub chkIntlZip_Click()
+    If chkIntlZip.Value = 1 Then
+        lblIntlZipSample.Caption = "Sample: GH6 R45"
+    Else
+        lblIntlZipSample.Caption = "Sample: GH6R45"
+    End If
+    Changed = True
+End Sub
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 1 Then
+        chkIntlZip.Value = Abs(SelectedControls(0).IZIPAllowSpaces)
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).IZIPAllowSpaces = chkIntlZip.Value * -1
+    SelectedControls(0).RefreshProperties "IZIPAllowSpaces"
+End Sub

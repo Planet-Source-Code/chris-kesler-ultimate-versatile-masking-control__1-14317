@@ -1,0 +1,93 @@
+VERSION 5.00
+Begin VB.PropertyPage pagDate 
+   Caption         =   "Date"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.Frame frmDates 
+      Height          =   2490
+      Left            =   1845
+      TabIndex        =   1
+      Top             =   270
+      Width           =   2400
+      Begin VB.OptionButton optDateType 
+         Caption         =   "Short Date Type"
+         Height          =   405
+         Index           =   0
+         Left            =   285
+         TabIndex        =   4
+         Tag             =   "01/01/2000"
+         Top             =   240
+         Value           =   -1  'True
+         Width           =   1650
+      End
+      Begin VB.OptionButton optDateType 
+         Caption         =   "Med Date Type"
+         Height          =   405
+         Index           =   1
+         Left            =   285
+         TabIndex        =   3
+         Tag             =   "Jan 01, 2000"
+         Top             =   997
+         Width           =   1650
+      End
+      Begin VB.OptionButton optDateType 
+         Caption         =   "Long Date Type"
+         Height          =   405
+         Index           =   2
+         Left            =   285
+         TabIndex        =   2
+         Tag             =   "January 01, 2000"
+         Top             =   1755
+         Width           =   1650
+      End
+   End
+   Begin VB.Label lblSample 
+      Alignment       =   2  'Center
+      Caption         =   "Sample: 01/01/2000"
+      Height          =   285
+      Left            =   405
+      TabIndex        =   0
+      Top             =   3120
+      Width           =   4665
+   End
+End
+Attribute VB_Name = "pagDate"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+Dim intOption As Integer
+
+
+Private Sub optDateType_Click(Index As Integer)
+
+    lblSample.Caption = "Sample: " & optDateType(Index).Tag
+    intOption = Index
+    Changed = True
+    
+End Sub
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 0 Then
+        optDateType(SelectedControls(0).DateTypeMask).Value = True
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    SelectedControls(0).DateTypeMask = intOption
+    SelectedControls(0).RefreshProperties "DateTypeMask"
+End Sub

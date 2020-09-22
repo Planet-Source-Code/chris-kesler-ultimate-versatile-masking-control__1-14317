@@ -1,0 +1,261 @@
+VERSION 5.00
+Begin VB.PropertyPage pagPhone 
+   Caption         =   "Phone"
+   ClientHeight    =   3495
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5925
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3495
+   ScaleWidth      =   5925
+   Begin VB.CheckBox chkPhone 
+      Caption         =   "Include Extension"
+      Height          =   435
+      Index           =   4
+      Left            =   1065
+      TabIndex        =   6
+      Top             =   2160
+      Width           =   1965
+   End
+   Begin VB.Frame Frame1 
+      Height          =   2865
+      Left            =   180
+      TabIndex        =   1
+      Top             =   120
+      Width           =   5550
+      Begin VB.CheckBox chkPhone 
+         Caption         =   "Use Area Code"
+         Height          =   435
+         Index           =   0
+         Left            =   885
+         TabIndex        =   5
+         Top             =   660
+         Width           =   1965
+      End
+      Begin VB.CheckBox chkPhone 
+         Caption         =   "Use Parenthesis"
+         Height          =   435
+         Index           =   1
+         Left            =   2985
+         TabIndex        =   4
+         Top             =   660
+         Width           =   1965
+      End
+      Begin VB.CheckBox chkPhone 
+         Caption         =   "Use Spaces"
+         Height          =   435
+         Index           =   2
+         Left            =   885
+         TabIndex        =   3
+         Top             =   1335
+         Width           =   1965
+      End
+      Begin VB.CheckBox chkPhone 
+         Caption         =   "Use Dashes"
+         Height          =   435
+         Index           =   3
+         Left            =   2985
+         TabIndex        =   2
+         Top             =   1335
+         Width           =   1965
+      End
+   End
+   Begin VB.Label lblSample 
+      Alignment       =   2  'Center
+      Caption         =   "Sample: 123-45-6789"
+      Height          =   285
+      Left            =   570
+      TabIndex        =   0
+      Top             =   3120
+      Width           =   4665
+   End
+End
+Attribute VB_Name = "pagPhone"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+Dim strFormat As String
+Dim strTemp(3) As String
+Private blnUpdate As Boolean
+
+Private Sub chkPhone_Click(Index As Integer)
+    
+    If blnUpdate Then Exit Sub
+
+    Select Case Index
+    Case 0  'area
+        If chkPhone(0).Value = 0 Then
+            blnUpdate = True
+            chkPhone(1).Value = 0
+            strTemp(0) = ""
+            strTemp(1) = ""
+        Else
+            strTemp(0) = "123"
+        End If
+        blnUpdate = False
+    Case 1  'pars
+        If chkPhone(1).Value = 1 Then
+            blnUpdate = True
+            chkPhone(0).Value = 1
+            strTemp(0) = "(123)"
+        Else
+            strTemp(0) = "123"
+        End If
+        blnUpdate = False
+    Case 2  'spaces
+        If chkPhone(2).Value = 1 Then   'use spaces
+            If chkPhone(3).Value = 0 Then   'replace dashes with spaces
+                strTemp(1) = " "
+                strTemp(2) = " "
+            Else
+                strTemp(2) = "-"
+                If chkPhone(0).Value = 1 Then
+                    strTemp(1) = " "
+                Else
+                    strTemp(1) = " "
+                End If
+            End If
+        Else    'dont use spaces
+            If chkPhone(3).Value = 1 Then   'replace spaces with dashes
+                strTemp(1) = "-"
+                strTemp(2) = "-"
+            Else
+                strTemp(1) = ""
+                strTemp(2) = ""
+            End If
+        End If
+    Case 3  'dashes
+        If chkPhone(3).Value = 1 Then   'use dashes
+            If chkPhone(2).Value = 1 Then   'use spaces
+                strTemp(1) = " "
+                strTemp(2) = "-"
+            Else
+                If chkPhone(0).Value = 1 Then
+                    strTemp(1) = "-"
+                Else
+                    strTemp(1) = ""
+                End If
+                strTemp(2) = "-"
+            End If
+        Else    'dont use dashes
+            If chkPhone(2).Value = 1 Then   'use spaces
+                strTemp(1) = " "
+                strTemp(2) = " "
+            Else
+                strTemp(1) = ""
+                strTemp(2) = ""
+            End If
+        End If
+    Case 4 'extension
+        If chkPhone(4).Value = 1 Then 'use Extension
+            If chkPhone(3).Value = 1 Then 'usedashes
+                If chkPhone(2).Value = 1 Then 'usespaces
+                    strTemp(1) = " "
+                    strTemp(2) = "-"
+                    strTemp(3) = " X89101"
+                Else ' no spaces
+                    If chkPhone(0).Value = 1 Then
+                        strTemp(1) = "-"
+                    Else
+                        strTemp(1) = ""
+                    End If
+                    strTemp(2) = "-"
+                    strTemp(3) = " X89101"
+                End If
+            Else 'dont use dashes
+                If chkPhone(2).Value = 1 Then 'use spaces
+                    strTemp(1) = " "
+                    strTemp(2) = " "
+                    strTemp(3) = " X89101"
+                Else
+                    strTemp(1) = ""
+                    strTemp(2) = ""
+                    strTemp(3) = " X89101"
+                End If
+            End If
+        Else 'No extension
+            If chkPhone(3).Value = 1 Then 'usedashes
+                If chkPhone(2).Value = 1 Then 'usespaces
+                    strTemp(1) = " "
+                    strTemp(2) = "-"
+                    strTemp(3) = ""
+                Else ' no spaces
+                    If chkPhone(0).Value = 1 Then
+                        strTemp(1) = "-"
+                    Else
+                        strTemp(1) = ""
+                    End If
+                    strTemp(2) = "-"
+                    strTemp(3) = ""
+                End If
+            Else 'dont use dashes
+                If chkPhone(2).Value = 1 Then 'use spaces
+                    strTemp(1) = " "
+                    strTemp(2) = " "
+                    strTemp(3) = ""
+                Else
+                    strTemp(1) = ""
+                    strTemp(2) = ""
+                    strTemp(3) = ""
+                End If
+            End If
+        End If
+                
+    End Select
+    lblSample.Caption = Trim(strTemp(0) & strTemp(1) & "123" & strTemp(2) & "4567" & strTemp(3))
+    If InStr(1, strTemp(0), "(") > 0 And InStr(1, strTemp(3), "X") > 0 Then
+        strFormat = "(&&&)" & strTemp(1) & "&&&" & strTemp(2) & "&&&&" & " X&&&&&"
+    ElseIf InStr(1, strTemp(0), "(") > 0 And InStr(1, strTemp(3), "X") = 0 Then
+        strFormat = "(&&&)" & strTemp(1) & "&&&" & strTemp(2) & "&&&&"
+    ElseIf InStr(1, strTemp(0), "1") > 0 And InStr(1, strTemp(3), "X") > 0 Then
+        strFormat = "&&&" & strTemp(1) & "&&&" & strTemp(2) & "&&&&" & " X&&&&&"
+    ElseIf InStr(1, strTemp(0), "1") > 0 And InStr(1, strTemp(3), "X") = 0 Then
+        strFormat = "&&&" & strTemp(1) & "&&&" & strTemp(2) & "&&&&"
+    ElseIf InStr(1, strTemp(3), "X") > 0 Then
+        strFormat = "&&&" & strTemp(2) & "&&&&" & " X&&&&&"
+    Else
+        strFormat = "&&&" & strTemp(2) & "&&&&"
+    End If
+    Changed = True
+End Sub
+
+Private Sub PropertyPage_Paint()
+    Dim ctlCont As Control
+    If SelectedControls(0).Masktype = 2 Then
+        With SelectedControls(0)
+            strFormat = .PhoneMaskType
+            chkPhone(0).Value = Abs(.AreaCode)
+            chkPhone(1).Value = Abs(.Parenthesis)
+            chkPhone(2).Value = Abs(.PhnSpaces)
+            chkPhone(3).Value = Abs(.PhnDashes)
+            chkPhone(4).Value = Abs(.Extension)
+        End With
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = True
+        Next
+    Else
+        For Each ctlCont In PropertyPage
+            ctlCont.Visible = False
+        Next
+    End If
+    Changed = False
+End Sub
+
+Private Sub PropertyPage_ApplyChanges()
+    With SelectedControls(0)
+        .PhoneMaskType = strFormat
+        .AreaCode = (chkPhone(0).Value * -1)
+        .Parenthesis = (chkPhone(1).Value * -1)
+        .PhnSpaces = (chkPhone(2).Value * -1)
+        .PhnDashes = (chkPhone(3).Value * -1)
+        .Extension = (chkPhone(4).Value * -1)
+        .RefreshProperties "PhoneMaskType"
+        .RefreshProperties "AreaCode"
+        .RefreshProperties "Parenthesis"
+        .RefreshProperties "PhnSpaces"
+        .RefreshProperties "PhnDashes"
+        .RefreshProperties "Extension"
+    End With
+End Sub
